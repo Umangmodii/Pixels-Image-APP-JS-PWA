@@ -25,11 +25,22 @@ function searchImages(query, page) {
         row.classList.add('row', 'justify-content-center');
 
         for (let j = i; j < i + 4 && j < data.photos.length; j++) {
+          const imgContainer = document.createElement('div');
+          imgContainer.classList.add('col-md-3', 'mb-3');
+
           const imgElement = document.createElement('img');
           imgElement.src = data.photos[j].src.medium;
           imgElement.alt = data.photos[j].alt;
-          imgElement.classList.add('img-fluid', 'rounded', 'm-2', 'col-md-3'); // Adjust column size for 4 images
-          row.appendChild(imgElement);
+          imgElement.classList.add('img-fluid', 'rounded', 'image-item');
+          imgContainer.appendChild(imgElement);
+
+          const downloadBtn = document.createElement('a');
+          downloadBtn.href = data.photos[j].src.original;
+          downloadBtn.download = 'image.jpg';
+          downloadBtn.innerHTML = '<button class="btn btn-primary mt-2">Download</button>';
+          imgContainer.appendChild(downloadBtn);
+
+          row.appendChild(imgContainer);
         }
 
         imagesContainer.appendChild(row);
@@ -56,33 +67,33 @@ function updatePaginationButtons() {
   const prevPageBtn = document.getElementById('prevPage');
   const nextPageBtn = document.getElementById('nextPage');
 
-prevPageBtn.disabled = currentPage === 1;
-nextPageBtn.disabled = currentPage === totalPages;
+  prevPageBtn.disabled = currentPage === 1;
+  nextPageBtn.disabled = currentPage === totalPages;
 
-prevPageBtn.addEventListener('click', () => {
-if (currentPage > 1) {
-searchImages(document.getElementById('searchInput').value.trim(), currentPage - 1);
-}
-});
+  prevPageBtn.addEventListener('click', () => {
+    if (currentPage > 1) {
+      searchImages(document.getElementById('searchInput').value.trim(), currentPage - 1);
+    }
+  });
 
-nextPageBtn.addEventListener('click', () => {
-if (currentPage < totalPages) {
-searchImages(document.getElementById('searchInput').value.trim(), currentPage + 1);
-}
-});
+  nextPageBtn.addEventListener('click', () => {
+    if (currentPage < totalPages) {
+      searchImages(document.getElementById('searchInput').value.trim(), currentPage + 1);
+    }
+  });
 }
 
 document.getElementById('searchBtn').addEventListener('click', () => {
-const searchInput = document.getElementById('searchInput');
-const query = searchInput.value.trim();
-if (query !== '') {
-searchImages(query, 1);
-} else {
-alert('Please enter search keywords.');
-}
+  const searchInput = document.getElementById('searchInput');
+  const query = searchInput.value.trim();
+  if (query !== '') {
+    searchImages(query, 1);
+  } else {
+    alert('Please enter search keywords.');
+  }
 });
 
 // Fetch and display images on page load
 document.addEventListener('DOMContentLoaded', () => {
-searchImages('', 1); // Empty query fetches 20 random images
+  searchImages('', 1); // Empty query fetches 20 random images
 });
